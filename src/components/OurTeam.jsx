@@ -55,7 +55,7 @@ export default function OurTeam() {
   }
 
   return (
-    <div className="md:min-h-screen bg-gray-100" dir={isRTL ? "rtl" : "ltr"}>
+    <div  data-aos="fade-down" className="md:min-h-screen bg-gray-100" dir={isRTL ? "rtl" : "ltr"}>
       <div className="xs:py-8 md:py-16 px-4">
         <div className="max-w-7xl mx-auto">
           {/* 1. Header */}

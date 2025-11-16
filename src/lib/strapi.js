@@ -219,6 +219,7 @@ export const getNavigation = async (locale = "en") => {
       id: data.id,
       documentId: data.documentId,
       title: attrs.title || "LOGO",
+      titleAr: attrs.titleAr || "LOGO",
       url: attrs.url || "/",
 
       // Logo - handles both nested and flat structures

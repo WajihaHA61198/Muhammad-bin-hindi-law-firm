@@ -8,7 +8,10 @@ import { FiMenu, FiSearch, FiX } from "react-icons/fi";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { useLanguage } from "./LanguageProvider";
 import { useTranslation } from "react-i18next";
-import { getNavigation, getServices } from "@/lib/strapi";
+import {
+  useGetNavigationQuery,
+  useGetServicesQuery,
+} from "@/lib/redux/strapiApi";
 
 // ──────────────────────────────────────────────────────────────
 // Fallback Services Data (if Strapi fails)
@@ -139,10 +142,10 @@ export default function HeaderNavigation() {
   const { t } = useTranslation();
   const router = useRouter();
 
-  // State for navigation data from Strapi
-  const [navigation, setNavigation] = useState(null);
-  const [services, setServices] = useState([]);
-  const [servicesLoading, setServicesLoading] = useState(true);
+  // Fetch navigation and services using Redux
+  const { data: navigation } = useGetNavigationQuery(language);
+  const { data: services = [], isLoading: servicesLoading } =
+    useGetServicesQuery();
 
   const [openMenu, setOpenMenu] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -150,6 +153,7 @@ export default function HeaderNavigation() {
   const [scrolled, setScrolled] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [mobileLangOpen, setMobileLangOpen] = useState(false);
 
   const isRTL = language === "ar";
 
@@ -160,34 +164,6 @@ export default function HeaderNavigation() {
 
   // Navbar solid when scrolled OR search OR menu open
   const navbarSolid = scrolled || searchOpen || dropdownOpen;
-
-  // Fetch navigation data (logo & title)
-  useEffect(() => {
-    async function loadNavigation() {
-      const nav = await getNavigation(language);
-      setNavigation(nav);
-    }
-    loadNavigation();
-  }, [language]);
-
-  // Fetch services from Strapi
-  useEffect(() => {
-    async function loadServices() {
-      setServicesLoading(true);
-      try {
-        // console.log("Fetching services from Strapi...");
-        const servicesData = await getServices();
-        // console.log("Services fetched:", servicesData);
-        setServices(servicesData);
-      } catch (error) {
-        // console.error("Error loading services:", error);
-        setServices([]);
-      } finally {
-        setServicesLoading(false);
-      }
-    }
-    loadServices();
-  }, []);
 
   // Scroll detection
   useEffect(() => {
@@ -239,25 +215,30 @@ export default function HeaderNavigation() {
     }
   };
 
-  // Change language handler
+  // Change language handler for desktop
   const handleLanguageChange = (code) => {
     changeLanguage(code);
     setLangOpen(false);
   };
 
+  // Change language handler for mobile
+  const handleMobileLanguageChange = (code) => {
+    changeLanguage(code);
+    setMobileLangOpen(false);
+  };
+
   // Get logo and title from Strapi
   const logoUrl = navigation?.logo?.url;
+  const title = navigation?.title;
+  const titleAr = navigation?.titleAr;
   const logoAlt = navigation?.logo?.alternativeText || navigation?.title;
   const homeUrl = navigation?.url || "/";
 
   // Group services by category
   const groupServicesByCategory = (servicesList) => {
     if (!Array.isArray(servicesList) || servicesList.length === 0) {
-      // console.log("No services from Strapi, using fallback");
       return fallbackServices;
     }
-
-    // console.log("Grouping Strapi services:", servicesList);
 
     const grouped = {};
     servicesList.forEach((service) => {
@@ -272,9 +253,7 @@ export default function HeaderNavigation() {
       grouped[category].items.push(service);
     });
 
-    const result = Object.values(grouped);
-    // console.log("Grouped services:", result);
-    return result;
+    return Object.values(grouped);
   };
 
   const servicesWithCategories = groupServicesByCategory(services);
@@ -283,11 +262,8 @@ export default function HeaderNavigation() {
   const splitIntoColumns = (categories) => {
     const numColumns = 4;
     const columns = [[], [], [], []];
-
-    // Calculate items per column
     const itemsPerColumn = Math.ceil(categories.length / numColumns);
 
-    // Distribute categories into columns
     categories.forEach((category, idx) => {
       const columnIndex = Math.floor(idx / itemsPerColumn);
       if (columnIndex < numColumns) {
@@ -295,13 +271,10 @@ export default function HeaderNavigation() {
       }
     });
 
-    // console.log("Service columns (chunked into 4):", columns);
     return columns;
   };
 
   const serviceColumns = splitIntoColumns(servicesWithCategories);
-
-  // console.log("Service columns:", serviceColumns);
 
   return (
     <nav
@@ -322,7 +295,7 @@ export default function HeaderNavigation() {
           href={homeUrl}
           className="font-bold text-xl text-white z-10 flex items-center gap-2"
         >
-          {logoUrl && (
+          {logoUrl ? (
             <Image
               src={logoUrl}
               alt={logoAlt}
@@ -332,13 +305,15 @@ export default function HeaderNavigation() {
               priority
               unoptimized
             />
+          ) : (
+            <>{title}</>
           )}
         </Link>
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
           <Link
-            href="/about"
+            href="#"
             className="text-white hover:text-neutral-200 transition"
           >
             {t("nav.about", "About Us")}
@@ -364,10 +339,6 @@ export default function HeaderNavigation() {
                 className={`
                   absolute top-full mt-2 w-[94vw] max-w-[90vw] bg-brand rounded-b-xl shadow-xl py-8 pb-12 z-50
                   ${
-                    // isRTL
-                    //   ? "right-0 origin-top-right"
-                    //   : "left-0 origin-top-left"
-
                     isRTL
                       ? "right-[unset] origin-top-right left-[50%] -translate-x-[70%]"
                       : "left-0 origin-top-left"
@@ -390,12 +361,6 @@ export default function HeaderNavigation() {
                       <div key={columnIdx} className="flex flex-col gap-8">
                         {column.map((category, categoryIdx) => (
                           <div key={categoryIdx}>
-                            {/* Category Title */}
-                            {/* <h3 className="text-white font-semibold text-lg mb-4 border-b border-white/20 pb-2">
-                              {isRTL ? category.titleAr : category.title}
-                            </h3> */}
-
-                            {/* Service Links */}
                             <div className="flex flex-col gap-7">
                               {category.items.map((service) => (
                                 <Link
@@ -427,19 +392,19 @@ export default function HeaderNavigation() {
           </div>
 
           <Link
-            href="/team"
+            href="#"
             className="text-white hover:text-neutral-200 transition"
           >
             {t("nav.team", "Our Team")}
           </Link>
           <Link
-            href="/blogs"
+            href="#"
             className="text-white hover:text-neutral-200 transition"
           >
             {t("nav.blogs", "Blogs")}
           </Link>
           <Link
-            href="/contact"
+            href="#"
             className="text-white hover:text-neutral-200 transition"
           >
             {t("nav.contact", "Contact Us")}
@@ -531,7 +496,7 @@ export default function HeaderNavigation() {
 
           {/* CTA */}
           <Link
-            href="/book"
+            href="#"
             className="text-white px-4 py-2 border border-white rounded-lg text-sm font-light hover:bg-white hover:text-brand transition"
           >
             {t("nav.book", "Book Appointment")}
@@ -582,7 +547,7 @@ export default function HeaderNavigation() {
       {openMenu && (
         <div className="md:hidden bg-brand p-6 space-y-4">
           <Link
-            href="/about"
+            href="#"
             className="block text-white hover:text-neutral-200"
             onClick={() => setOpenMenu(false)}
           >
@@ -644,21 +609,21 @@ export default function HeaderNavigation() {
           </div>
 
           <Link
-            href="/team"
+            href="#"
             className="block text-white hover:text-neutral-200"
             onClick={() => setOpenMenu(false)}
           >
             {t("nav.team", "Our Team")}
           </Link>
           <Link
-            href="/blogs"
+            href="#"
             className="block text-white hover:text-neutral-200"
             onClick={() => setOpenMenu(false)}
           >
             {t("nav.blogs", "Blogs")}
           </Link>
           <Link
-            href="/contact"
+            href="#"
             className="block text-white hover:text-neutral-200"
             onClick={() => setOpenMenu(false)}
           >
@@ -666,28 +631,29 @@ export default function HeaderNavigation() {
           </Link>
 
           <div className="pt-4 space-y-3">
+            {/* Mobile Language Switcher */}
             <div className="relative">
               <button
-                onClick={() => setLangOpen(!langOpen)}
-                className="w-full text-center text-sm font-medium px-3 py-1 rounded border border-white/30 text-white flex items-center justify-center gap-1"
+                onClick={() => setMobileLangOpen(!mobileLangOpen)}
+                className="w-full text-center text-sm font-medium px-3 py-2 rounded border border-white/30 text-white flex items-center justify-center gap-1"
               >
                 {language.toUpperCase()}
                 <MdOutlineKeyboardArrowDown
-                  className={`w-4 h-4 transition ${
-                    langOpen ? "rotate-180" : ""
+                  className={`w-4 h-4 transition-transform ${
+                    mobileLangOpen ? "rotate-180" : ""
                   }`}
                 />
               </button>
-              {langOpen && (
-                <div className="mt-2 bg-brand rounded-lg shadow-xl">
+              {mobileLangOpen && (
+                <div className="mt-2 bg-brand rounded-lg shadow-xl border border-white/10">
                   {languages.map((item) => (
                     <button
                       key={item.code}
-                      onClick={() => handleLanguageChange(item.code)}
-                      className={`w-full text-left px-4 py-2 text-sm flex items-center gap-2 ${
+                      onClick={() => handleMobileLanguageChange(item.code)}
+                      className={`w-full text-left px-4 py-2 text-sm flex items-center gap-2 transition ${
                         language === item.code
                           ? "bg-neutral-900 text-white"
-                          : "text-white/80"
+                          : "text-white/80 hover:bg-white/10"
                       }`}
                     >
                       <span className="text-lg">{item.flag}</span>
@@ -699,7 +665,7 @@ export default function HeaderNavigation() {
             </div>
 
             <Link
-              href="/book"
+              href="#"
               className="block w-full bg-white text-brand text-center px-5 py-2 rounded font-medium"
               onClick={() => setOpenMenu(false)}
             >

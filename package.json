@@ -10,6 +10,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.10.1",
     "@strapi/sdk-js": "^1.0.0",
+    "aos": "^2.3.4",
     "axios": "^1.13.2",
     "formik": "^2.4.9",
     "i18next": "^25.6.2",
