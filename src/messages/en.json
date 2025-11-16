@@ -1,0 +1,129 @@
+{
+  "nav": {
+    "about": "About Us",
+    "services": "Services",
+    "team": "Our Team",
+    "blogs": "Blogs",
+    "contact": "Contact Us",
+    "search": "Search...",
+    "book": "Book Appointment"
+  },
+  "services": {
+    "legal_consultation": "Legal Consultation Services",
+    "foreign_investment": "Foreign Investment Services",
+    "contracts": "Contracts",
+    "naturalization": "Naturalization",
+    "insurance": "Insurance",
+    "defence": "Defence in all cases",
+    "banks": "Banks and Financial Institutions",
+    "governance": "Corporate Governance Services",
+    "liquidation": "Companies Liquidation",
+    "regulations": "Internal Regulations for companies",
+    "companies": "Services for Companies and Institutions",
+    "arbitration": "Arbitration",
+    "ip": "Intellectual Property",
+    "restructuring": "Corporate Restructuring and Reorganization",
+    "establishing": "Establishing National and Foreign Companies",
+    "agencies": "Commercial Agencies",
+    "vision": "Supporting Vision 2030",
+    "estates": "Estates"
+  },
+  "footer": {
+    "newsletter": {
+      "placeholder": "Enter your email",
+      "aria": "Email address for newsletter subscription",
+      "subscribe": "Subscribe",
+      "loading": "Subscribing...",
+      "success": "Subscribed!",
+      "successMessage": "Successfully subscribed!",
+      "error": "Subscription failed. Try again."
+    },
+    "validation": {
+      "email": {
+        "required": "Email is required",
+        "invalid": "Invalid email address"
+      }
+    },
+    "contact": "Contact Us",
+    "nav": {
+      "about": "About",
+      "strategy": "Our Strategy",
+      "advantages": "Our Advantages",
+      "responsibility": "Social Responsibility",
+      "services": "Our Services"
+    },
+    "copyright": "All rights reserved."
+  },
+  "testimonials": {
+    "title": "What our clients are saying",
+    "subtitle": "Our clients range from individual investors, to local, international as well as Fortune 500 companies.",
+    "prev": "Previous testimonial",
+    "next": "Next testimonial",
+    "client1": {
+      "text": "With the help of the hospitable staff of Al Safar and Partners I was able to get my work done without any hassle. The help I received helped me a great deal to overcome the issues that I faced. I was always updated about my case and my queries never went unanswered.",
+      "author": "Mohammed Saif",
+      "role": "CEO/Company"
+    },
+    "client2": {
+      "text": "With the help of the hospitable staff of Al Safar and Partners I was able to get my work done without any hassle. The help I received helped me a great deal to overcome the issues that I faced. I was always updated about my case and my queries never went unanswered.",
+      "author": "Mohammed Saif Ali",
+      "role": "CEO/Company"
+    }
+  },
+  "team": {
+    "title": "Our Team",
+    "subtitle": "Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem ipsum has been the industry's standard dummy text ever since the 1500s",
+    "prev": "Previous slide",
+    "next": "Next slide",
+    "whatsapp": "WhatsApp",
+    "phone": "Phone",
+    "email": "Email",
+    "member1": {
+      "name": "Name Here",
+      "position": "POSITION HERE"
+    },
+    "member2": {
+      "name": "Name Here",
+      "position": "POSITION HERE"
+    },
+    "member3": {
+      "name": "Name Here",
+      "position": "POSITION HERE"
+    },
+    "member4": {
+      "name": "Jane Smith",
+      "position": "SENIOR DESIGNER"
+    },
+    "member5": {
+      "name": "Mike Johnson",
+      "position": "PROJECT MANAGER"
+    }
+  },
+  "hero": {
+    "readMore": "Read More",
+    "imageAlt": "Hero image",
+    "prev": "Previous slide",
+    "next": "Next slide",
+    "goToSlide": "Go to slide {{number}}",
+    "slide1": {
+      "title": "Lorem Ipsum",
+      "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s."
+    },
+    "slide2": {
+      "title": "Modern Architecture",
+      "description": "Exploring the beauty of contemporary design and urban landscapes. Discover how modern architecture shapes our cities and lives."
+    },
+    "slide3": {
+      "title": "City Lights",
+      "description": "Experience the vibrant energy of metropolitan areas at night. The city never sleeps and neither does innovation."
+    },
+    "slide4": {
+      "title": "Urban Development",
+      "description": "Building the future one structure at a time. See how urban planning creates sustainable and livable communities."
+    },
+    "slide5": {
+      "title": "Innovation Hub",
+      "description": "Where technology meets tradition. Discover the intersection of modern innovation and timeless architectural principles."
+    }
+  }
+}

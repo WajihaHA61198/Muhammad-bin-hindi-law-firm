@@ -1,15 +1,26 @@
 @import "tailwindcss";
 
+.font-arabic {
+  font-family: "Tajawal", sans-serif;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --brand: #4b2615;
 }
 
 @theme inline {
+  /* --- Breakpoints --- */
+  --breakpoint-xs: 300px;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  /* --font-sans: var(--font-geist-sans); */
+  --font-sans: var(--font-dm-sans);
   --font-mono: var(--font-geist-mono);
+  /* --color-brand: var(--brand); */
+  --color-brand: #4b2615;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -17,10 +28,31 @@
     --background: #0a0a0a;
     --foreground: #ededed;
   }
+  .bg-services h3 {
+    @apply text-brand text-xl mb-5;
+  }
+  .bg-services p {
+    @apply text-sm mb-1;
+  }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* background: var(--background);
+  color: var(--foreground); */
+  /* font-family: "var(--font-sans)", sans-serif; */
+  font-family: var(--font-dm-sans);
+  /* font-family: "DM Sans", sans-serif; */
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background: #4d2d20;
+  border-radius: 5px;
 }
