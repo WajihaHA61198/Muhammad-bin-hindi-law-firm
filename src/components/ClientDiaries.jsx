@@ -4,33 +4,21 @@ import { useState, useEffect } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "./LanguageProvider";
-import { getTestimonials, getStrapiMedia } from "@/lib/strapi";
+import { useGetTestimonialsQuery } from "@/lib/redux/strapiApi";
+import Image from "next/image";
 
 export default function ClientDiaries() {
   const { t } = useTranslation();
   const { language } = useLanguage();
   const isRTL = language === "ar";
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [testimonials, setTestimonials] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  // Fetch testimonials from Strapi
-  useEffect(() => {
-    const fetchTestimonials = async () => {
-      try {
-        const data = await getTestimonials();
-        // console.log("Testimonials fetched:", data);
-        setTestimonials(data);
-      } catch (error) {
-        console.error("Error fetching testimonials:", error);
-        setTestimonials([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTestimonials();
-  }, []);
+  // Fetch testimonials using Redux Toolkit Query
+  const {
+    data: testimonials = [],
+    isLoading,
+    error,
+  } = useGetTestimonialsQuery();
 
   const prevSlide = () => {
     setCurrentIndex((prev) =>
@@ -54,7 +42,7 @@ export default function ClientDiaries() {
     return () => clearInterval(interval);
   }, [currentIndex, testimonials.length]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <section className="bg-brand text-white xs:py-8 md:py-16 px-6 mb-6">
         <div className="max-w-7xl mx-auto flex items-center justify-center min-h-[400px]">
@@ -62,6 +50,18 @@ export default function ClientDiaries() {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
             <p className="text-white">{t("common.loading", "Loading...")}</p>
           </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="bg-brand text-white xs:py-8 md:py-16 px-6 mb-6">
+        <div className="max-w-7xl mx-auto flex items-center justify-center min-h-[400px]">
+          <p className="text-red-400">
+            {t("common.error", "Error loading testimonials")}
+          </p>
         </div>
       </section>
     );
@@ -87,11 +87,13 @@ export default function ClientDiaries() {
       <div className="max-w-7xl mx-auto">
         {/* Title and subtitle remain static with i18n translations */}
         <h2 className="text-2xl md:text-[33px] font-semibold mb-5">
-          What our clients are saying
+          {t("testimonials.title", "What our clients are saying")}
         </h2>
         <p className="text-sm md:text-[15px] mb-12 max-w-[500px] text-white/60">
-          Our clients range from individual investors, to local, international
-          as well as Fortune 500 companies.
+          {t(
+            "testimonials.subtitle",
+            "Our clients range from individual investors, to local, international as well as Fortune 500 companies."
+          )}
         </p>
 
         <div className="relative overflow-hidden">
@@ -104,17 +106,9 @@ export default function ClientDiaries() {
             }}
           >
             {testimonials.map((testimonial) => {
-              // Get image URL from Strapi
-              let imageUrl = null;
-              if (testimonial.image?.data?.attributes?.url) {
-                imageUrl = testimonial.image.data.attributes.url;
-              } else if (testimonial.image?.url) {
-                imageUrl = testimonial.image.url;
-              } else if (testimonial.image?.data?.[0]?.attributes?.url) {
-                imageUrl = testimonial.image.data[0].attributes.url;
-              }
-
-              const fullImageUrl = getStrapiMedia(imageUrl);
+              const imageUrl = testimonial.image?.url;
+              const imageWidth = testimonial.image?.width || 400;
+              const imageHeight = testimonial.image?.height || 500;
               const displayText = isRTL
                 ? testimonial.textAr || testimonial.text
                 : testimonial.text;
@@ -131,17 +125,14 @@ export default function ClientDiaries() {
                   className="w-full flex-shrink-0 flex flex-col md:flex-row xs:gap-4 md:gap-10 px-4"
                 >
                   <div className="flex-shrink-0 md:w-[30%]">
-                    <div className="overflow-hidden bg-[#643F2E]">
+                    <div className="overflow-hidden bg-[#643F2E] relative aspect-[4/5]">
                       <img
-                        src={
-                          fullImageUrl || "https://via.placeholder.com/400x500"
-                        }
+                        src={imageUrl || "https://via.placeholder.com/400x500"}
                         alt={displayAuthor}
+                        width={imageWidth}
+                        height={imageHeight}
                         className="w-full h-full object-cover"
-                        onError={(e) => {
-                          console.error("Image failed to load:", fullImageUrl);
-                          e.target.src = "https://via.placeholder.com/400x500";
-                        }}
+                        priority={false}
                       />
                     </div>
                   </div>
@@ -171,7 +162,7 @@ export default function ClientDiaries() {
             <button
               onClick={prevSlide}
               className="xs:p-2 md:p-5 rounded-full bg-white/20 hover:bg-white flex items-center justify-center transition-colors"
-              aria-label="prev"
+              aria-label={t("testimonials.prev", "Previous testimonial")}
             >
               {isRTL ? (
                 <FaArrowRight className="w-4 h-4 hover:text-[#4B2615]" />
@@ -182,7 +173,7 @@ export default function ClientDiaries() {
             <button
               onClick={nextSlide}
               className="xs:p-2 md:p-5 rounded-full bg-white/20 hover:bg-white flex items-center justify-center transition-colors"
-              aria-label="next"
+              aria-label={t("testimonials.next", "Next testimonial")}
             >
               {isRTL ? (
                 <FaArrowLeft className="w-4 h-4 hover:text-[#4B2615]" />

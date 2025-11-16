@@ -2,10 +2,15 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { FaAngleLeft } from "react-icons/fa6";
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "./LanguageProvider";
 
 const BackButton = () => {
   const router = useRouter();
+  const { t } = useTranslation();
+  const { language } = useLanguage();
+  const isRTL = language === "ar";
 
   const handleBack = (e) => {
     e.preventDefault();
@@ -14,18 +19,18 @@ const BackButton = () => {
     if (window.history.length > 1) {
       router.back();
     } else {
-      // Fallback if no history (e.g. direct URL access)
-      router.push(backLink || "/services");
+      router.push("/services");
     }
   };
 
   return (
     <button
       onClick={handleBack}
-      className="cursor-pointer inline-flex items-center gap-2 text-amber-900 hover:text-amber-700 transition-colors mb-8 text-sm font-medium"
+      className="cursor-pointer inline-flex items-center gap-2 text-brand hover:text-amber-900 transition-colors mb-8 text-sm font-medium"
+      dir={isRTL ? "rtl" : "ltr"}
     >
-      <FaAngleLeft size={18} />
-      Back
+      {isRTL ? <FaAngleRight size={18} /> : <FaAngleLeft size={18} />}
+      {isRTL ? "خلف" : "Back"}
     </button>
   );
 };

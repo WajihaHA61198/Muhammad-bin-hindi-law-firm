@@ -6,7 +6,8 @@ import Link from "next/link";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "./LanguageProvider";
-import { getHeroSlides, getStrapiMedia } from "@/lib/strapi";
+import { useGetHeroSlidesQuery } from "@/lib/redux/strapiApi";
+import { assets } from "../../public/assets";
 
 export default function Carousel() {
   const { t } = useTranslation();
@@ -14,27 +15,9 @@ export default function Carousel() {
   const isRTL = language === "ar";
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [slides, setSlides] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  // Fetch slides from Strapi
-  useEffect(() => {
-    const fetchSlides = async () => {
-      setLoading(true);
-      try {
-        // console.log("Fetching slides from Strapi...");
-        const data = await getHeroSlides();
-        // console.log("Received data:", data);
-        // console.log("Data length:", data?.length);
-        setSlides(data);
-      } catch (error) {
-        // console.error("Error loading slides:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchSlides();
-  }, []);
+  // Fetch slides using Redux Toolkit Query
+  const { data: slides = [], isLoading, error } = useGetHeroSlidesQuery();
 
   useEffect(() => {
     if (!isAutoPlaying || slides.length === 0) return;
@@ -61,7 +44,7 @@ export default function Carousel() {
     setIsAutoPlaying(false);
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="h-screen flex items-center justify-center bg-brand">
         <div className="text-white text-2xl">
@@ -71,11 +54,21 @@ export default function Carousel() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-brand">
+        <div className="text-white text-2xl">
+          {t("common.error", "Error loading slides")}
+        </div>
+      </div>
+    );
+  }
+
   if (slides.length === 0) {
     return (
       <div className="h-screen flex items-center justify-center bg-brand">
         <div className="text-white text-2xl">
-          No slides available. Check console for errors.
+          {t("common.noSlides", "No slides available")}
         </div>
       </div>
     );
@@ -88,27 +81,13 @@ export default function Carousel() {
     >
       <div className="relative h-screen overflow-hidden">
         {slides.map((slide, index) => {
-          // console.log("Rendering slide:", slide);
-
           // Get the correct field based on language
           const title = isRTL ? slide.titleAr : slide.title;
           const description = isRTL ? slide.descriptionAr : slide.description;
           const cta = isRTL ? slide.ctaAr : slide.cta;
           const ctaUrl = slide.ctaUrl;
-          let backgroundImageUrl = null;
-          let miniImageUrl = null;
-
-          if (slide.image?.url) {
-            backgroundImageUrl = getStrapiMedia(slide.image.url);
-          }
-          if (slide.mini_image?.url) {
-            miniImageUrl = getStrapiMedia(slide.mini_image.url);
-          }
-
-          // console.log("Background Image URL:", backgroundImageUrl);
-          // console.log("Mini Image URL:", miniImageUrl);
-          // console.log("Full slide data:", JSON.stringify(slide, null, 2));
-          // console.log("Mini Image Object:", slide.mini_image);
+          const backgroundImageUrl = slide.image?.url;
+          const miniImageUrl = slide.mini_image?.url;
 
           return (
             <div
@@ -145,10 +124,16 @@ export default function Carousel() {
 
                   <div className="hidden md:flex justify-end">
                     <div className="w-80 h-80 bg-[#643F2E] flex items-center justify-center">
-                      {miniImageUrl ? (
+                      <Image
+                        src={assets.profile}
+                        alt={title || "Hero slide"}
+                        width={640}
+                        height={480}
+                        className="object-cover"
+                      />
+                      {/* {miniImageUrl ? (
                         <Image
-                          // src={miniImageUrl}
-                          src="https://cdn.shopify.com/s/files/1/0680/4180/1945/files/2e2cf1b6f441c6f28c3b0e1e0eb4863eb80b7401.png?v=1763112906"
+                          src={miniImageUrl}
                           alt={title || "Hero slide"}
                           width={640}
                           height={480}
@@ -158,7 +143,7 @@ export default function Carousel() {
                         <div className="w-64 h-64 bg-[#643F2E] rounded-lg flex items-center justify-center text-white">
                           No Image
                         </div>
-                      )}
+                      )} */}
                     </div>
                   </div>
                 </div>

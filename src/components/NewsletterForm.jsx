@@ -118,9 +118,9 @@ export default function NewsletterForm() {
           type="submit"
           disabled={submitStatus === "loading" || submitStatus === "success"}
           className={`
-            bg-[#4B2615] text-white text-sm font-light py-2 px-5 rounded-md sm:rounded-l-none sm:rounded-r-md
+            bg-brand text-white text-sm font-light py-2 px-5 rounded-md sm:rounded-l-none sm:rounded-r-md
             hover:opacity-90 transition-all whitespace-nowrap
-            focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#5C3A2E]
+            focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brand
             disabled:opacity-70 disabled:cursor-not-allowed
             ${submitStatus === "loading" ? "animate-pulse" : ""}
           `}
@@ -152,7 +152,7 @@ export default function NewsletterForm() {
         <p
           role="alert"
           aria-live="assertive"
-          className="text-red-300 text-sm text-center mt-2 animate-fade-in"
+          className="text-red-400 text-sm text-center mt-2 animate-fade-in"
         >
           {errorMessage}
         </p>

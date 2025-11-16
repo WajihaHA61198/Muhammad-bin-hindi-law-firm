@@ -1,38 +1,24 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { TfiEmail } from "react-icons/tfi";
 import { LiaPhoneVolumeSolid } from "react-icons/lia";
 import { PiWhatsappLogoLight } from "react-icons/pi";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "./LanguageProvider";
-import { getTeamMembers, getStrapiMedia } from "@/lib/strapi";
+import { useGetTeamMembersQuery } from "@/lib/redux/strapiApi";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function OurTeam() {
   const { t } = useTranslation();
   const { language } = useLanguage();
   const isRTL = language === "ar";
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [teamMembers, setTeamMembers] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchTeamMembers = async () => {
-      try {
-        const data = await getTeamMembers();
-        // console.log("Team members fetched:", data);
-        setTeamMembers(data);
-      } catch (error) {
-        // console.error("Error fetching team members:", error);
-        setTeamMembers([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTeamMembers();
-  }, []);
+  // Fetch team members using Redux Toolkit Query
+  const { data: teamMembers = [], isLoading, error } = useGetTeamMembersQuery();
 
   const itemsPerPage = 3;
   const maxSlide = Math.max(0, teamMembers.length - itemsPerPage);
@@ -45,12 +31,24 @@ export default function OurTeam() {
     setCurrentSlide((prev) => Math.max(prev - 1, 0));
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="md:min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand mx-auto mb-4"></div>
           <p className="text-gray-600">{t("common.loading", "Loading...")}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="md:min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600">
+            {t("common.error", "Error loading team members")}
+          </p>
         </div>
       </div>
     );
@@ -109,8 +107,7 @@ export default function OurTeam() {
                   }}
                 >
                   {teamMembers.map((member) => {
-                    // console.log("Member data:", member);
-                    // console.log("Member image:", member.image);
+                    // const imageUrl = member.image?.url;
 
                     let imageUrl = null;
                     if (member.image?.data?.attributes?.url) {
@@ -120,10 +117,7 @@ export default function OurTeam() {
                     } else if (member.image?.data?.[0]?.attributes?.url) {
                       imageUrl = member.image.data[0].attributes.url;
                     }
-
-                    // console.log("Image URL:", imageUrl);
-                    const fullImageUrl = getStrapiMedia(imageUrl);
-                    // console.log("Full Image URL:", fullImageUrl);
+                    const fullImageUrl = imageUrl;
 
                     const displayName = isRTL
                       ? member.nameAr || member.name
@@ -138,22 +132,16 @@ export default function OurTeam() {
                         className="lg:w-1/3 xs:w-full flex-shrink-0 md:px-4"
                       >
                         <div className="overflow-hidden transition-shadow">
-                          <div className="aspect-4/3 overflow-hidden bg-gradient-to-br from-amber-900 to-amber-700">
+                          <div className="aspect-4/3 overflow-hidden bg-gradient-to-br from-amber-900 to-amber-700 group">
                             <img
                               src={
                                 fullImageUrl ||
                                 "https://via.placeholder.com/400"
                               }
+                              width="400"
+                              height="300"
                               alt={displayName}
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                console.error(
-                                  "Image failed to load:",
-                                  fullImageUrl
-                                );
-                                e.target.src =
-                                  "https://via.placeholder.com/400";
-                              }}
+                              className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
                             />
                           </div>
 
@@ -167,7 +155,7 @@ export default function OurTeam() {
                             </p>
 
                             <div className="flex justify-center gap-3">
-                              <a
+                              <Link
                                 href="#"
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -175,21 +163,23 @@ export default function OurTeam() {
                                 aria-label={t("team.whatsapp", "WhatsApp")}
                               >
                                 <PiWhatsappLogoLight className="w-5 h-5 font-medium" />
-                              </a>
-                              <a
+                              </Link>
+
+                              <Link
                                 href="#"
                                 className="text-black hover:text-blue-600 transition-colors"
                                 aria-label={t("team.phone", "Phone")}
                               >
                                 <LiaPhoneVolumeSolid className="w-5 h-5 font-medium" />
-                              </a>
-                              <a
+                              </Link>
+
+                              <Link
                                 href="#"
                                 className="text-black hover:text-red-600 transition-colors"
                                 aria-label={t("team.email", "Email")}
                               >
                                 <TfiEmail className="w-4 h-4 font-medium" />
-                              </a>
+                              </Link>
                             </div>
                           </div>
                         </div>

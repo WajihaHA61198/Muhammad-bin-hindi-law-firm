@@ -27,7 +27,7 @@ export default function PageBanners({ title }) {
 
           {/* Fade-in H1 */}
           <h1
-            className={`absolute inset-0 flex items-center justify-center text-white text-4xl font-bold transition-opacity duration-1000 ${
+            className={`absolute inset-0 flex items-center justify-center text-white xs:text-lg md:text-6xl font-bold transition-opacity duration-1000 ${
               fadeIn ? "opacity-100" : "opacity-0"
             }`}
           >

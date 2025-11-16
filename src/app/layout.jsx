@@ -2,7 +2,7 @@ import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { Footer, Navbar } from "@/components";
 import { LanguageProvider } from "@/components/LanguageProvider";
-// import ReduxProvider from "@/components/ReduxProvider";
+import ReduxProvider from "@/components/ReduxProvider";
 
 const DMSans = DM_Sans({
   weight: ["300", "400", "500", "700"],
@@ -19,13 +19,13 @@ export default async function RootLayout({ children }) {
   return (
     <html>
       <body className={`${DMSans.variable} antialiased`}>
-        {/* <ReduxProvider> */}
+        <ReduxProvider>
           <LanguageProvider>
             <Navbar />
             {children}
             <Footer />
           </LanguageProvider>
-        {/* </ReduxProvider> */}
+        </ReduxProvider>
       </body>
     </html>
   );

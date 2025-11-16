@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "./LanguageProvider";
@@ -45,33 +44,33 @@ export default function Footer() {
                 {t("footer.contact", "Contact Us")}
               </Link>
               <div className="flex gap-5 items-center">
-                <a
-                  href={SOCIAL_LINKS.twitter}
+                <Link
+                  href="#"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="X (Twitter)"
                   className="hover:text-neutral-200 transition-colors"
                 >
                   <FaTwitter className="w-5 h-5" />
-                </a>
-                <a
-                  href={SOCIAL_LINKS.facebook}
+                </Link>
+                <Link
+                  href="#"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Facebook"
                   className="hover:text-neutral-200 transition-colors"
                 >
                   <FaFacebookF className="w-5 h-5" />
-                </a>
-                <a
-                  href={SOCIAL_LINKS.instagram}
+                </Link>
+                <Link
+                  href="#"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Instagram"
                   className="hover:text-neutral-200 transition-colors"
                 >
                   <FaInstagram className="w-6 h-6" />
-                </a>
+                </Link>
               </div>
             </div>
           </div>

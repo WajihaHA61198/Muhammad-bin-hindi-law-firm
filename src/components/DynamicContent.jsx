@@ -1,7 +1,5 @@
 "use client";
 
-// import { ChevronLeft } from 'lucide-react';
-import Link from "next/link";
 import BackButton from "./BackButton";
 
 export default function DynamicContent() {
