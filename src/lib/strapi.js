@@ -10,7 +10,7 @@ const strapiApi = axios.create({
   headers: {
     "Content-Type": "application/json",
      "Cache-Control": "no-cache, no-store, must-revalidate",
-    // ...(STRAPI_API_TOKEN && { Authorization: `Bearer ${STRAPI_API_TOKEN}` }),
+    ...(STRAPI_API_TOKEN && { Authorization: `Bearer ${STRAPI_API_TOKEN}` }),
   },
 });
 
