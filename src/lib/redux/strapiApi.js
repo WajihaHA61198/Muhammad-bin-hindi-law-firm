@@ -18,9 +18,9 @@ export const strapiApi = createApi({
     baseUrl: `${STRAPI_URL}/api`,
     prepareHeaders: (headers) => {
       headers.set("Content-Type", "application/json");
-      if (STRAPI_API_TOKEN) {
-        headers.set("Authorization", `Bearer ${STRAPI_API_TOKEN}`);
-      }
+      // if (STRAPI_API_TOKEN) {
+      //   headers.set("Authorization", `Bearer ${STRAPI_API_TOKEN}`);
+      // }
       return headers;
     },
   }),

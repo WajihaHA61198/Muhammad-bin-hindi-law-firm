@@ -5,14 +5,12 @@ const STRAPI_URL =
   "https://humble-nature-e17034c032.strapiapp.com";
 const STRAPI_API_TOKEN = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
 
-// console.log("Strapi URL:", STRAPI_URL);
-// console.log("Strapi Token exists:", !!STRAPI_API_TOKEN);
-
 const strapiApi = axios.create({
   baseURL: `${STRAPI_URL}`,
   headers: {
     "Content-Type": "application/json",
-    ...(STRAPI_API_TOKEN && { Authorization: `Bearer ${STRAPI_API_TOKEN}` }),
+     "Cache-Control": "no-cache, no-store, must-revalidate",
+    // ...(STRAPI_API_TOKEN && { Authorization: `Bearer ${STRAPI_API_TOKEN}` }),
   },
 });
 
