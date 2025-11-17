@@ -3,14 +3,15 @@ import axios from "axios";
 const STRAPI_URL =
   process.env.STRAPI_URL ||
   "https://humble-nature-e17034c032.strapiapp.com";
-const STRAPI_API_TOKEN = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
+// const STRAPI_API_TOKEN = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
+const STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN;
 
 const strapiApi = axios.create({
   baseURL: `${STRAPI_URL}`,
   headers: {
     "Content-Type": "application/json",
      "Cache-Control": "no-cache, no-store, must-revalidate",
-    ...(STRAPI_API_TOKEN && { Authorization: `Bearer ${STRAPI_API_TOKEN}` }),
+    // ...(STRAPI_API_TOKEN && { Authorization: `Bearer ${STRAPI_API_TOKEN}` }),
   },
 });
 
