@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const STRAPI_URL =
-  process.env.NEXT_PUBLIC_STRAPI_URL ||
+  process.env.STRAPI_URL ||
   "https://humble-nature-e17034c032.strapiapp.com";
 const STRAPI_API_TOKEN = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
 
