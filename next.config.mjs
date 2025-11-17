@@ -11,6 +11,11 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "humble-nature-e17034c032.strapiapp.com",
+        pathname: "/uploads/**",
+      },
+      {
+        protocol: "https",
         hostname: "cdn.shopify.com",
         pathname: "/**",
       },

@@ -13,6 +13,8 @@ import {
   useGetServicesQuery,
 } from "@/lib/redux/strapiApi";
 
+// import { localizedLink } from "@/lib/localizedLink";
+
 // ──────────────────────────────────────────────────────────────
 // Fallback Services Data (if Strapi fails)
 // ──────────────────────────────────────────────────────────────
@@ -138,6 +140,9 @@ const languages = [
 ];
 
 export default function HeaderNavigation() {
+  // Helper to generate localized href
+  // const getLocalizedHref = (href) => localizedLink(href, language);
+
   const { language, changeLanguage } = useLanguage();
   const { t } = useTranslation();
   const router = useRouter();
@@ -293,6 +298,7 @@ export default function HeaderNavigation() {
         {/* Logo */}
         <Link
           href={homeUrl}
+          // href={getLocalizedHref("/")}
           className="font-bold text-xl text-white z-10 flex items-center gap-2"
         >
           {logoUrl ? (
