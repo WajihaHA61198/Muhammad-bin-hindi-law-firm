@@ -898,7 +898,7 @@ export const getServiceBySlug = async (slug) => {
       console.log("❌ No service found");
 
       // Debug: Show all available services
-      const allResponse = await strapiApi.get("/services?populate=*");
+      const allResponse = await strapiApi.get("/api/services?populate=*");
       console.log("\n📋 Available services:");
       allResponse.data.data.forEach((s, i) => {
         // Try both structures
