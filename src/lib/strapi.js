@@ -9,7 +9,7 @@ const STRAPI_API_TOKEN = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
 // console.log("Strapi Token exists:", !!STRAPI_API_TOKEN);
 
 const strapiApi = axios.create({
-  baseURL: `${STRAPI_URL}/api`,
+  baseURL: `${STRAPI_URL}`,
   headers: {
     "Content-Type": "application/json",
     ...(STRAPI_API_TOKEN && { Authorization: `Bearer ${STRAPI_API_TOKEN}` }),
@@ -58,7 +58,7 @@ export const getStrapiMedia = (url) => {
 export const getHeroSlides = async () => {
   try {
     // console.log("Fetching hero slides...");
-    const response = await strapiApi.get("/hero-slides", {
+    const response = await strapiApi.get("/api/hero-slides", {
       params: {
         sort: "order:asc",
         populate: "*",
@@ -106,7 +106,7 @@ export const getHeroSlides = async () => {
 export const getTeamMembers = async () => {
   try {
     // console.log("Fetching team members...");
-    const response = await strapiApi.get("/team-members", {
+    const response = await strapiApi.get("/api/team-members", {
       params: {
         sort: "order:asc",
         populate: "*",
@@ -157,7 +157,7 @@ export const getTeamMembers = async () => {
 export const getTestimonials = async () => {
   try {
     // console.log("Fetching testimonials...");
-    const response = await strapiApi.get("/testimonials", {
+    const response = await strapiApi.get("/api/testimonials", {
       params: {
         sort: "order:asc",
         populate: "*",
@@ -204,7 +204,7 @@ export const getTestimonials = async () => {
 export const getNavigation = async (locale = "en") => {
   try {
     // console.log("Fetching navigation...");
-    const response = await strapiApi.get("/navigation", {
+    const response = await strapiApi.get("/api/navigation", {
       params: {
         locale: locale,
         populate: "logo",
@@ -269,7 +269,7 @@ export const subscribeToNewsletter = async ({ email, language = "en" }) => {
 
     // Step 1: Check if email already exists
     try {
-      const existingResponse = await strapiApi.get("/subscribers", {
+      const existingResponse = await strapiApi.get("/api/subscribers", {
         params: {
           filters: {
             email: {
@@ -520,7 +520,7 @@ export const getServicesPaginated = async (options = {}) => {
       };
     }
 
-    const response = await strapiApi.get("/services", { params });
+    const response = await strapiApi.get("/api/services", { params });
 
     // console.log("Services response:", response.data);
 
@@ -585,7 +585,7 @@ export const getServicesPaginated = async (options = {}) => {
 export const getServices = async () => {
   try {
     // console.log("Fetching all services...");
-    const response = await strapiApi.get("/services", {
+    const response = await strapiApi.get("/api/services", {
       params: {
         populate: "*",
         sort: ["order:asc"],
@@ -878,7 +878,7 @@ export const getServiceBySlug = async (slug) => {
     console.log("\n========== FETCHING SERVICE ==========");
     console.log("Slug:", slug);
 
-    const response = await strapiApi.get("/services", {
+    const response = await strapiApi.get("/api/services", {
       params: {
         filters: {
           slug: {
@@ -965,7 +965,7 @@ export const getServiceBySlug = async (slug) => {
 // ──────────────────────────────────────────────────────────────
 export const getService = async () => {
   try {
-    const response = await strapiApi.get("/services?populate=*&sort=order:asc");
+    const response = await strapiApi.get("/api/services?populate=*&sort=order:asc");
     const items = response.data?.data || [];
 
     return items.map((item) => {
