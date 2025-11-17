@@ -25,7 +25,7 @@ const nextConfig = {
         pathname: "/**",
       },
     ],
-    domains: ["cdn.shopify.com"],
+    domains: ["cdn.shopify.com", "humble-nature-e17034c032.strapiapp.com"],
   },
   reactStrictMode: true,
 };
