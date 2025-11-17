@@ -89,7 +89,7 @@ export function LanguageProvider({ children }) {
     i18n.changeLanguage(language);
     document.documentElement.lang = language;
     document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
-  }, []);
+  }, []); 
 
   // ✅ Change language and update URL
   const changeLanguage = (newLang) => {
